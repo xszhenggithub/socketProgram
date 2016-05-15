@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<memory.h>
+#include<netinet/in.h>
 #include<sys/types.h>
 #include<sys/socket.h>
 #include<unistd.h>
@@ -30,16 +31,15 @@ int main(){
 
 	listenfd=socket(AF_INET,SOCK_STREAM,0);
 
-	memset(&seraddr,0,sizeof(servaddr));
+	memset(&servaddr,0,sizeof(servaddr));
 	servaddr.sin_family=AF_INET;
 	servaddr.sin_port=13;
-	servaddr.sin_addr.sa_family=AF_INET;
-	servaddr.sin_addr.sa_data="255.255.255.255";
+	servaddr.sin_addr.s_addr=0;
 
-	bind(listenfd,&servadd,sizeof(servaddr));
-	listen(listenfd, );
+	bind(listenfd,(struct sockaddr*)&servaddr,sizeof(servaddr));
+	listen(listenfd,5);
 
-	while(true){
+	while(1){
 		connfd=accept(listenfd,NULL,NULL);
 		ticks=time(NULL);
 		snprintf(buffer,BUFFSIZE,"%.24s\r\n",ctime(&ticks));

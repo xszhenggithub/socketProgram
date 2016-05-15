@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<memory.h>
+#include<netinet/in.h>
 #include<sys/types.h>
 #include<sys/socket.h>
 #include<unistd.h>
@@ -31,13 +32,12 @@ int main(){
 		return 1;
 	}
 
-	memset(&seraddr,0,sizeof(struct sockaddr_in));
+	memset(&servaddr,0,sizeof(servaddr));
 	servaddr.sin_family=AF_INET;
 	servaddr.sin_port=13;
-	servaddr.sin_addr.sa_family=AF_INET;
-	servaddr.sin_addr.sa_data="127.0.0.1";
+	servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
 
-	if(connect(sockfd,(SA*)&servaddr,sizeof(servaddr))<0){
+	if(connect(sockfd,(struct sockaddr*)&servaddr,sizeof(servaddr))<0){
 		printf("connet error\n");
 		return 2;
 	}
@@ -51,6 +51,8 @@ int main(){
 		printf("read error\n");
 		return 3;
 	}
+
+	close(sockfd);
 
 	return 0;
 }
